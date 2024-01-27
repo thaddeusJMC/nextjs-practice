@@ -97,6 +97,7 @@ export async function fetchCardData() {
     ]);
 
     console.log(data)
+    throw Error("Stop here please")
 
     const numberOfInvoices = Number(data[0]);
     const numberOfCustomers = Number(data[1]);
