@@ -46,6 +46,8 @@ export async function fetchLatestInvoices() {
       `id, amount, status, customers( name, email, image_url )`
     ).order("date", {ascending: false}).limit(5)
 
+    console.log(latestInvoices.data)
+
     const latestInvoicesFormatted: Array<LatestInvoice>= latestInvoices.data!.map((invoice) => {return {
       id: invoice.id,
       name: invoice.customers[0].name,
