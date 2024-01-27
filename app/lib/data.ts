@@ -9,6 +9,7 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { UUID } from 'crypto';
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
@@ -38,16 +39,25 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
+    type InvoiceCustomerData = {
+      id: string,
+      amount: number,
+      status: string,
+      customer_id: UUID,
+      customers: {
+        name: string,
+        email: string,
+        image_url: string
+      }
+    }
+
     const supabaseUrl = process.env.SUPABASE_URL!
     const supabaseKey = process.env.SUPABASE_KEY!
     const supabase =  createClient(supabaseUrl, supabaseKey)
 
-    const latestInvoices = await supabase.from("invoices").select(
+    const latestInvoices= await supabase.from("invoices").select(
       `id, amount, status, customer_id, customers( name, email, image_url )`
-    ).order("date", {ascending: false}).limit(5)
-
-    console.log(latestInvoices.data![0].customers)
-    console.log(latestInvoices.data![0].customers[0])
+    ).order("date", {ascending: false}).limit(5).returns<InvoiceCustomerData[]>()
 
     const latestInvoicesFormatted: Array<LatestInvoice>= latestInvoices.data!.map((invoice) => {return {
       id: invoice.id,
