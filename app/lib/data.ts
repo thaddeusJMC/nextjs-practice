@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
-// import {
-//   CustomerField,
-//   CustomersTableType,
-//   InvoiceForm,
-//   InvoicesTable,
-//   LatestInvoiceRaw,
-//   User,
-//   Revenue,
-// } from './definitions';
-// import { formatCurrency } from './utils';
+import {
+  CustomerField,
+  CustomersTableType,
+  InvoiceForm,
+  InvoicesTable,
+  LatestInvoice,
+  User,
+  Revenue,
+} from './definitions';
+import { formatCurrency } from './utils';
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
@@ -29,7 +29,6 @@ export async function fetchRevenue() {
 
     // console.log('Data fetch completed after 3 seconds.');
 
-    console.log(data.data)
     return data.data!;
   } catch (error) {
     console.error('Database Error:', error);
@@ -37,25 +36,30 @@ export async function fetchRevenue() {
   }
 }
 
-// export async function fetchLatestInvoices() {
-//   try {
-//     const data = await sql<LatestInvoiceRaw>`
-//       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-//       FROM invoices
-//       JOIN customers ON invoices.customer_id = customers.id
-//       ORDER BY invoices.date DESC
-//       LIMIT 5`;
+export async function fetchLatestInvoices() {
+  try {
+    const supabaseUrl = process.env.SUPABASE_URL!
+    const supabaseKey = process.env.SUPABASE_KEY!
+    const supabase =  createClient(supabaseUrl, supabaseKey)
 
-//     const latestInvoices = data.rows.map((invoice) => ({
-//       ...invoice,
-//       amount: formatCurrency(invoice.amount),
-//     }));
-//     return latestInvoices;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch the latest invoices.');
-//   }
-// }
+    const latestInvoices = await supabase.from("invoices").select(
+      `id, amount, status, customers( name, email, image_url )`
+    ).order("date", {ascending: false}).limit(5)
+
+    const latestInvoicesFormatted: Array<LatestInvoice>= latestInvoices.data!.map((invoice) => {return {
+      id: invoice.id,
+      name: invoice.customers[0].name,
+      email: invoice.customers[0].email,
+      image_url: invoice.customers[0].image_url,
+      amount: formatCurrency(invoice.amount)
+    }})
+    return latestInvoicesFormatted
+    }
+    catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest invoices.');
+  }
+}
 
 // export async function fetchCardData() {
 //   try {
