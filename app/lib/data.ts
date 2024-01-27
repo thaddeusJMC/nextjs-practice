@@ -96,7 +96,7 @@ export async function fetchCardData() {
       invoicePendingPromise
     ]);
 
-    console.log(data)
+    console.dir(data, {depth:null})
     throw Error("Stop here please")
 
     const numberOfInvoices = Number(data[0]);
