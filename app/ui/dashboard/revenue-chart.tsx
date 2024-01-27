@@ -15,6 +15,20 @@ export default async function RevenueChart({
   revenue: Revenue[];
 }) {
   const chartHeight = 350;
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ]
   // NOTE: comment in this code when you get to this point in the course
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
@@ -40,16 +54,16 @@ export default async function RevenueChart({
             ))}
           </div>
 
-          {revenue.map((month) => (
-            <div key={month.month} className="flex flex-col items-center gap-2">
+          {months.map((month) => (
+            <div key={month} className="flex flex-col items-center gap-2">
               <div
                 className="w-full rounded-md bg-blue-300"
                 style={{
-                  height: `${(chartHeight / topLabel) * month.revenue}px`,
+                  height: `${(chartHeight / topLabel) * revenue.filter((rev) => rev.month == month)[0].revenue}px`,
                 }}
               ></div>
               <p className="-rotate-90 text-sm text-gray-400 sm:rotate-0">
-                {month.month}
+                {month}
               </p>
             </div>
           ))}
