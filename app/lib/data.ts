@@ -96,12 +96,18 @@ export async function fetchCardData() {
       invoicePendingPromise
     ]);
 
-    console.dir(data, {depth:null})
+    console.dir(data[2], {depth:null})
+    console.dir(data[3], {depth:null})
 
     const numberOfInvoices = Number(data[0].count);
     const numberOfCustomers = Number(data[1].count);
-    const totalPaidInvoices = formatCurrency(data[2].data?.reduce((a,b) => a.amount+b.amount));
-    const totalPendingInvoices = formatCurrency(data[3].data?.reduce((a,b) => a.amount+b.amount));
+    const totalPaidInvoices = (data[2].data?.reduce((a,b) => a.amount+b.amount));
+    const totalPendingInvoices = (data[3].data?.reduce((a,b) => a.amount+b.amount));
+
+    console.log(totalPaidInvoices)
+    console.log(totalPendingInvoices)
+
+    throw Error("debugging :o")
 
     return {
       numberOfCustomers,
