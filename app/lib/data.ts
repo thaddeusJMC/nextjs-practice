@@ -43,7 +43,7 @@ export async function fetchLatestInvoices() {
     const supabase =  createClient(supabaseUrl, supabaseKey)
 
     const latestInvoices = await supabase.from("invoices").select(
-      `id, amount, status, customers( name, email, image_url )`
+      `id, amount, status, customer_id, customers( name, email, image_url )`
     ).order("date", {ascending: false}).limit(5)
 
     console.log(latestInvoices.data)
