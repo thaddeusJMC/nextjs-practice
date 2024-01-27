@@ -7,6 +7,7 @@ import {
   LatestInvoice,
   User,
   Revenue,
+  Invoice,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { UUID } from 'crypto';
@@ -96,13 +97,17 @@ export async function fetchCardData() {
       invoicePendingPromise
     ]);
 
-    console.dir(data[2], {depth:null})
-    console.dir(data[3], {depth:null})
+    console.dir(data[2].data, {depth:null})
+    console.dir(data[3].data, {depth:null})
 
     const numberOfInvoices = Number(data[0].count);
     const numberOfCustomers = Number(data[1].count);
-    const totalPaidInvoices = (data[2].data?.reduce((a,b) => {return a.amount+b.amount}));
-    const totalPendingInvoices = (data[3].data?.reduce((a,b) => {return a.amount+b.amount}));
+    const totalPaidInvoices = data[2].data!
+      .map((invoice: Invoice) => invoice.amount)
+      .reduce((a,b) => {return a+b});
+    const totalPendingInvoices = data[3].data!
+      .map((invoice: Invoice) => invoice.amount)
+      .reduce((a,b) => {return a+b});
 
     console.log(totalPaidInvoices)
     console.log(totalPendingInvoices)
