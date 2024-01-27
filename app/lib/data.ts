@@ -99,10 +99,10 @@ export async function fetchCardData() {
     console.dir(data, {depth:null})
     throw Error("Stop here please")
 
-    const numberOfInvoices = Number(data[0]);
-    const numberOfCustomers = Number(data[1]);
-    const totalPaidInvoices = formatCurrency(data[2].data?.reduce((a,b) => a+b));
-    const totalPendingInvoices = formatCurrency(data[3].data?.reduce((a,b) => a+b));
+    const numberOfInvoices = Number(data[0].count);
+    const numberOfCustomers = Number(data[1].count);
+    const totalPaidInvoices = formatCurrency(data[2].data?.reduce((a,b) => a.amount+b.amount));
+    const totalPendingInvoices = formatCurrency(data[3].data?.reduce((a,b) => a.amount+b.amount));
 
     return {
       numberOfCustomers,
