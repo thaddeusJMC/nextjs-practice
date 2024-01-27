@@ -50,9 +50,9 @@ export async function fetchLatestInvoices() {
 
     const latestInvoicesFormatted: Array<LatestInvoice>= latestInvoices.data!.map((invoice) => {return {
       id: invoice.id,
-      name: invoice.customers[0].name,
-      email: invoice.customers[0].email,
-      image_url: invoice.customers[0].image_url,
+      name: invoice.customers[0]["name"],
+      email: invoice.customers[0]["email"],
+      image_url: invoice.customers[0]["image_url"],
       amount: formatCurrency(invoice.amount)
     }})
     return latestInvoicesFormatted
